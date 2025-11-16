@@ -21,8 +21,7 @@ Synopsis
     git secrets --add-provider [--global] <command> [arguments...]
     git secrets --register-aws [--global]
     git secrets --aws-provider [<credentials-file>]
-    git secrets --remove [-d|--deleteallowed] [-u|--deleteliteral] [--global] <pattern>
-
+    git secrets --remove [-a|--allowed] [-l|--literal] [--global] <pattern>
 
 Description
 -----------
@@ -400,14 +399,16 @@ Options for ``--remove``
 ``--global``
     Removes patterns from the global git config
 
-``-u, --deleteliteral``
-    Removes a literal pattern added with the --add command from the git config
+``-l, --literal``
+    Escapes special regular expression characters in the provided pattern so
+    that the pattern is searched for literally.
 
-``-d, --deleteallowed``
-    Removes an allowed pattern from the git config
+``-a, --allowed``
+    Mark the pattern as allowed instead of prohibited. Allowed patterns are
+    used to filter out false positives.
 
 ``<pattern>``
-    The regex pattern to remove.
+    The regex pattern to search.
 
 
 Examples
@@ -423,11 +424,11 @@ Removes a prohibited pattern to the global git config::
 
 Removes a string that is scanned for literally (``+`` is escaped)::
 
-    git secrets --remove --deleteliteral 'foo+bar'
+    git secrets --remove --literal 'foo+bar'
 
 Removes an allowed pattern::
 
-    git secrets --remove -d 'allowed pattern'
+    git secrets --remove -a 'allowed pattern'
 
 
 Defining prohibited patterns
