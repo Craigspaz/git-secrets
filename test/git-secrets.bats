@@ -367,10 +367,12 @@ load test_helper
   [ $status -eq 0 ]
   repo_run git-secrets --list
   [ $status -eq 0 ]
+  echo "${output}" | grep -F 'secrets.patterns test'
   repo_run git-secrets --remove "test"
   [ $status -eq 0 ]
   repo_run git-secrets --list
   [ $status -eq 0 ]
+  echo "${output}" | grep -Fv 'secrets.patterns test'
 }
 
 @test "Adds and removes secrets to a repo and de-dedupes" {
@@ -389,10 +391,16 @@ load test_helper
   echo "$output" | grep -F 'secrets.patterns testing\+abc'
   repo_run git-secrets --remove 'testing123'
   [ $status -eq 0 ]
+  repo_run git-secrets --list
+  [ $status -eq 0 ]
+  echo "$output" | grep -Fv 'secrets.patterns testing123'
   repo_run git-secrets --remove 'testing123'
   [ $status -eq 0 ]
   repo_run git-secrets --remove --literal 'testing+abc'
   [ $status -eq 0 ]
+  repo_run git-secrets --list
+  [ $status -eq 0 ]
+  echo "$output" | grep -Fv 'secrets.patterns testing\+abc'
   repo_run git-secrets --remove -l 'testing+abc'
   [ $status -eq 0 ]
 }
@@ -413,10 +421,16 @@ load test_helper
   echo "$output" | grep -F 'secrets.allowed testing\+abc'
   repo_run git-secrets --remove -a 'testing123'
   [ $status -eq 0 ]
+  repo_run git-secrets --list
+  [ $status -eq 0 ]
+  echo "$output" | grep -Fv 'secrets.allowed testing123'
   repo_run git-secrets --remove --allowed 'testing123'
   [ $status -eq 0 ]
   repo_run git-secrets --remove -a -l 'testing+abc'
   [ $status -eq 0 ]
+  repo_run git-secrets --list
+  [ $status -eq 0 ]
+  echo "$output" | grep -Fv 'secrets.allowed testing\+abc'
   repo_run git-secrets --remove -a -l 'testing+abc'
   [ $status -eq 0 ]
 }
